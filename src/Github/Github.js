@@ -1,19 +1,20 @@
 import React, { Component } from 'react';
+import { bindActionCreators } from 'redux';
 import { getGithub } from '../App'
 import { connect } from 'react-redux'
 
 class Github extends Component {
     state = {
-        user: 'wwrodom'
+        user: ''
     }
 
     componentDidMount() {
         console.log('props github', this.props)
         this.props.getGithub()
     }
-    handleChange = (e) => {
-        this.setState({ [e.target.name]: e.target.value });
-        console.log("input:",this.state.user)
+
+    handleChange = (name) => (e) => {
+        this.setState({ [name]: e.target.value });
     }
 
     renderGithub = () => {
@@ -41,8 +42,8 @@ class Github extends Component {
 
                 {this.renderGithub()}
 
-                <input name="user" onChange={this.handleChange} placeholder="Username" /><br /><br />
-                <button onClick={() => this.getGithub()}   >Search</button><br /><br /><br />
+                <input value={this.state.user} name="user" onChange={this.handleChange('user')} placeholder="Username" /><br /><br />
+                <button onClick={() => this.props.getGithub(this.state.user)}   >Search</button><br /><br /><br />
 
             </div>
         );
@@ -54,9 +55,9 @@ const mapStateToProps = ({ github }) => {
 }
 
 const mapDispatchToProps = (dispatch) => {
-    return {
-        getGithub: () => dispatch(getGithub())
-    }
+    return  bindActionCreators({
+        getGithub
+    }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Github);
