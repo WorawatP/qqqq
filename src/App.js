@@ -1,28 +1,30 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, {Component} from 'react';
+import {Provider} from 'react-redux'
+import {createStore, combineReducers} from 'redux'
+import Count from './count'
+// ========  action (As Dispatcher) ==========
+export const add = () => ({type: 'ADD'})
+export const minus = () => ({ type: 'MINUS'})
 
+// ========  reducer (As Controller) =========
+export const numberReducer = (state = 0, action) => {
+   switch (action.type) {
+       case 'ADD':
+           return state + 1
+       case 'MINUS':
+           return state - 1
+       default:
+           return state
+   }
+}
+export const rootReducer = combineReducers({number: numberReducer})
+export const store = createStore(rootReducer)
+
+// ======== wrap root element by Provider with Store ========
 class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
-    );
-  }
+   render() {
+       return <Provider store={store}><Count/> </Provider>
+   }
 }
 
-export default App;
+export default App
